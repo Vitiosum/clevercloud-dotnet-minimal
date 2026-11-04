@@ -8,6 +8,8 @@
 
 **Run it yourself.** The hosted demo was taken down after the presales review (November 2026). The steps in [Deploy on Clever Cloud](#deploy-on-clever-cloud) recreate it from scratch in about 5 minutes.
 
+**Get certified.** This demo runs on Clever Cloud. To deploy your own apps the same way, get certified at the [Clever Cloud Academy](https://academy.clever.cloud/).
+
 ## What ASP.NET Core does here
 
 Each title strip is a record, each of its two sides is a selection key (letters skip I, as on the old jukeboxes). Click a key, or type its code on the keyboard (`E` then `2`).
