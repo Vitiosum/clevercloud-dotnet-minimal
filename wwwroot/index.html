@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#13172e">
+<title>Kestrel jukebox | ASP.NET Core minimal API on Clever Cloud</title>
+<meta name="description" content="A jukebox whose twenty records are the routes of one ASP.NET Core Program.cs. Press a key, hear the real HTTP answer.">
+<link rel="icon" href="/cc-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/cc-brand.css">
+<link rel="stylesheet" href="/jukebox.css">
+<script src="/jukebox.js" defer></script>
+</head>
+<body>
+
+<header class="cc-topbar">
+  <div class="cc-container cc-topbar__inner">
+    <a href="https://www.clever.cloud" target="_blank" rel="noopener" aria-label="Clever Cloud">
+      <svg class="cc-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 116" role="img" aria-label="Clever Cloud">
+  <g fill="none">
+        <g fill="currentColor" transform="translate(129 35)">
+      <path d="M15.241,18.87 C10.52,18.87 7.335,22.47 7.335,27.013 C7.335,31.556 10.58,35.215 15.183,35.215 C18.074,35.215 20.375,34.212 22.145,32.442 L25.804,37.753 C23.562,40.232 19.49,42.002 15.005,42.002 C6.627,42.002 0.136,35.275 0.136,27.073 C0.136,18.812 6.627,12.086 14.888,12.086 C19.726,12.086 23.562,13.738 26.039,16.335 L21.909,21.468 C20.139,19.755 18.015,18.87 15.241,18.87 Z"/>
+      <polygon points="31.229 .578 38.428 .578 38.428 41.174 31.229 41.174"/>
+      <path d="M44.976,27.072 C44.976,18.811 51.112,12.085 59.255,12.085 C67.339,12.085 73.475,18.339 73.475,26.482 C73.475,27.367 73.416,28.37 73.298,28.842 L52.351,28.842 C53.059,32.795 56.069,35.628 60.435,35.628 C63.267,35.628 65.687,34.389 67.339,32.678 L71.056,37.575 C68.932,40.053 64.919,42 60.14,42 C51.348,42 44.976,35.274 44.976,27.072 Z M52.469,24.299 L66.1,24.299 C65.274,20.286 62.737,18.221 59.373,18.221 C55.773,18.221 53.295,20.699 52.469,24.299 Z"/>
+      <polygon points="104.864 12.911 94.656 41.175 85.333 41.175 75.065 12.911 82.972 12.911 90.17 34.743 97.487 12.911"/>
+      <path d="M106.867 27.072C106.867 18.811 113.003 12.085 121.146 12.085 129.23 12.085 135.366 18.339 135.366 26.482 135.366 27.367 135.307 28.37 135.189 28.842L114.242 28.842C114.95 32.795 117.96 35.628 122.326 35.628 125.158 35.628 127.578 34.389 129.23 32.678L132.947 37.575C130.823 40.053 126.81 42 122.031 42 113.239 42 106.867 35.274 106.867 27.072zM114.36 24.299L127.991 24.299C127.165 20.286 124.628 18.221 121.264 18.221 117.665 18.221 115.187 20.699 114.36 24.299zM148.758 41.174L141.56 41.174 141.56 12.91 148.758 12.91 148.758 15.978C150.351 13.618 152.711 12.083 155.661 12.083 157.55 12.083 159.084 12.614 160.205 13.499L157.195 20.344C156.252 19.577 154.836 19.105 153.478 19.105 150.586 19.105 148.757 21.524 148.757 25.36L148.757 41.174 148.758 41.174zM191.415 18.87C186.694 18.87 183.508 22.47 183.508 27.013 183.508 31.556 186.753 35.215 191.356 35.215 194.248 35.215 196.548 34.212 198.319 32.442L201.977 37.753C199.735 40.232 195.664 42.002 191.179 42.002 182.8 42.002 176.31 35.275 176.31 27.073 176.31 18.812 182.8 12.086 191.061 12.086 195.9 12.086 199.735 13.738 202.213 16.335L198.082 21.468C196.312 19.755 194.188 18.87 191.415 18.87z"/>
+      <polygon points="207.402 .578 214.6 .578 214.6 41.174 207.402 41.174"/>
+      <path d="M221.148 27.072C221.148 18.811 227.639 12.085 235.84 12.085 244.042 12.085 250.592 18.812 250.592 27.072 250.592 35.274 244.042 42.001 235.84 42.001 227.64 42 221.148 35.274 221.148 27.072zM243.335 27.013C243.335 22.47 240.207 18.87 235.9 18.87 231.533 18.87 228.347 22.47 228.347 27.013 228.347 31.556 231.533 35.215 235.9 35.215 240.207 35.215 243.335 31.556 243.335 27.013zM263.924 28.193C263.924 32.323 266.343 35.097 269.943 35.097 273.542 35.097 275.962 32.324 275.962 28.193L275.962 12.911 283.16 12.911 283.16 28.724C283.16 36.631 277.909 41.882 269.943 41.882 261.977 41.882 256.725 36.631 256.725 28.724L256.725 12.911 263.924 12.911 263.924 28.193zM318.795.578L318.795 41.174 311.537 41.174 311.537 38.106C309.472 40.525 306.58 42.001 302.922 42.001 295.429 42.001 289.351 35.864 289.351 27.072 289.351 18.516 295.075 12.085 302.922 12.085 306.64 12.085 309.53 13.442 311.537 15.743L311.537.578 318.795.578zM311.537 27.013C311.537 22.47 308.409 18.87 304.102 18.87 299.735 18.87 296.549 22.47 296.549 27.013 296.549 31.556 299.735 35.215 304.102 35.215 308.409 35.215 311.537 31.556 311.537 27.013z"/>
+    </g>
+    <polygon fill="#AB2B4A" points="100.423 29.134 100.423 86.868 89.721 73.062 83.76 58.003 83.756 58.003 89.418 42.731"/><polygon fill="#E87A68" points=".429 29.134 .429 86.868 9.889 73.481 17.092 58.003 17.096 58.003 9.773 43.319"/><polygon fill="#D74D4E" points="83.756 58.003 52.241 60.003 17.092 58.003 31.76 29.134 50.426 .269 70.722 31.961"/><polygon fill="#BD3246" points="100.423 29.134 83.756 58.003 50.426 .269"/><polygon fill="#F19175" points="50.426 .269 17.092 58.003 .425 29.134"/><polygon fill="#CF3942" points="83.756 58.003 72.365 82.931 50.426 115.737 27.849 81.83 17.092 58.003"/><polygon fill="#E0625B" points="50.426 115.737 .425 86.868 17.092 58.003"/><polygon fill="#9A244F" points="50.422 115.737 100.423 86.868 83.756 58.003"/>
+  </g>
+</svg>
+    </a>
+    <span class="cc-topbar__sep"></span>
+    <div class="cc-topbar__demo"><small>Demo</small>ASP.NET Core minimal API</div>
+    <span class="cc-topbar__spacer"></span>
+    <nav class="cc-topbar__nav" aria-label="Status">
+      <span class="cc-pill cc-pill--mono cc-hide-sm">.NET 8 · Kestrel</span>
+      <span class="cc-pill cc-pill--live" id="live-pill"><span class="cc-dot"></span><span id="live-text">Live on Clever Cloud</span></span>
+      <a class="cc-pill cc-pill--gradient" href="https://academy.clever.cloud/" target="_blank" rel="noopener">Get certified ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="diner">
+  <div class="diner__room">
+
+    <!-- The jukebox: crown with the record mechanism, lamps, title strips, base with the serial plate -->
+    <section class="jukebox" id="jukebox" data-status="idle" data-phase="idle" aria-label="Kestrel jukebox">
+      <svg class="crown" viewBox="0 0 600 250" aria-hidden="true">
+        <defs>
+          <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8a4627"/><stop offset=".5" stop-color="#5e2c18"/><stop offset="1" stop-color="#3d1a0e"/>
+          </linearGradient>
+          <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f6f8fb"/><stop offset=".45" stop-color="#9aa3b4"/><stop offset=".55" stop-color="#5b6377"/><stop offset="1" stop-color="#dfe4ec"/>
+          </linearGradient>
+          <linearGradient id="chrome-h" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#6a7387"/><stop offset=".3" stop-color="#f4f6fa"/><stop offset=".6" stop-color="#8d96a8"/><stop offset="1" stop-color="#e3e7ee"/>
+          </linearGradient>
+          <radialGradient id="glass" cx=".5" cy="1" r="1">
+            <stop offset="0" stop-color="#2a1c3c"/><stop offset=".6" stop-color="#140f24"/><stop offset="1" stop-color="#0a0816"/>
+          </radialGradient>
+          <radialGradient id="label-a" cx=".4" cy=".35" r=".8">
+            <stop offset="0" stop-color="#e2524f"/><stop offset="1" stop-color="#9d1f2c"/>
+          </radialGradient>
+          <radialGradient id="label-b" cx=".4" cy=".35" r=".8">
+            <stop offset="0" stop-color="#f7eed8"/><stop offset="1" stop-color="#d9c79f"/>
+          </radialGradient>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <clipPath id="dome-clip"><path d="M68 240 A232 180 0 0 1 532 240 Z"/></clipPath>
+        </defs>
+
+        <!-- Walnut arch and the three light tubes; their colour follows the last HTTP status -->
+        <path d="M0 250 V240 A300 240 0 0 1 600 240 V250 Z" fill="url(#wood)"/>
+        <g class="tubes" filter="url(#glow)">
+          <path class="tube tube--1" d="M16 240 A284 225 0 0 1 584 240"/>
+          <path class="tube tube--2" d="M33 240 A267 210 0 0 1 567 240"/>
+          <path class="tube tube--3" d="M50 240 A250 195 0 0 1 550 240"/>
+        </g>
+        <g class="bubbles">
+          <path class="bubble bubble--1" d="M16 240 A284 225 0 0 1 584 240"/>
+          <path class="bubble bubble--2" d="M33 240 A267 210 0 0 1 567 240"/>
+          <path class="bubble bubble--3" d="M50 240 A250 195 0 0 1 550 240"/>
+        </g>
+        <path d="M62 240 A238 186 0 0 1 538 240" fill="none" stroke="url(#chrome)" stroke-width="7"/>
+
+        <!-- The dome: record stack, platter, record, tonearm -->
+        <path d="M68 240 A232 180 0 0 1 532 240 Z" fill="url(#glass)"/>
+        <g clip-path="url(#dome-clip)">
+          <path d="M300 240 L196 70 L232 64 Z M300 240 L392 64 L426 72 Z" fill="#ffb15a" opacity=".05"/>
+          <g class="stack" id="stack"></g>
+
+          <circle cx="360" cy="156" r="82" fill="#0d0b16" stroke="url(#chrome)" stroke-width="3"/>
+          <g class="disc" id="disc">
+            <g class="disc__spin">
+              <circle cx="360" cy="156" r="76" fill="#121018"/>
+              <g fill="none" stroke="#ffffff" stroke-opacity=".07">
+                <circle cx="360" cy="156" r="71"/><circle cx="360" cy="156" r="65"/><circle cx="360" cy="156" r="59"/>
+                <circle cx="360" cy="156" r="53"/><circle cx="360" cy="156" r="47"/><circle cx="360" cy="156" r="41"/><circle cx="360" cy="156" r="35"/>
+              </g>
+              <circle id="disc-label" cx="360" cy="156" r="30" fill="url(#label-a)"/>
+              <text class="disc__code" id="disc-code" x="360" y="153" text-anchor="middle">A1</text>
+              <text class="disc__path" id="disc-path" x="360" y="168" text-anchor="middle">/plaintext</text>
+              <path d="M339 142 A25 25 0 0 1 381 142" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>
+            </g>
+            <path d="M360 156 L307 101 A76 76 0 0 1 342 82 Z M360 156 L413 211 A76 76 0 0 1 378 230 Z" fill="#ffffff" opacity=".06"/>
+          </g>
+          <circle cx="360" cy="156" r="3" fill="url(#chrome-h)"/>
+
+          <g class="arm" id="arm">
+            <path d="M448 118 L451 102" stroke="url(#chrome-h)" stroke-width="6" stroke-linecap="round"/>
+            <path d="M448 118 L436 214 L432 228" fill="none" stroke="url(#chrome-h)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M425 220 L440 222 L438 238 L424 236 Z" fill="#c7ccd6" stroke="#5b6377"/>
+            <circle cx="448" cy="118" r="12" fill="url(#chrome)" stroke="#40475a"/>
+            <circle cx="448" cy="118" r="3.5" fill="#40475a"/>
+          </g>
+
+          <path d="M82 240 A214 165 0 0 1 150 120 L166 132 A196 150 0 0 0 106 240 Z" fill="#ffffff" opacity=".05"/>
+        </g>
+        <rect x="0" y="240" width="600" height="10" fill="url(#chrome)"/>
+      </svg>
+
+      <div class="jukebox__body">
+        <div class="marquee">
+          <ul class="lamps" aria-label="Status lamps">
+            <li class="lamp lamp--200" data-lamp="200"><span></span>200</li>
+            <li class="lamp lamp--400" data-lamp="400"><span></span>400</li>
+            <li class="lamp lamp--404" data-lamp="404"><span></span>404</li>
+            <li class="lamp lamp--500" data-lamp="500"><span></span>500</li>
+          </ul>
+          <p class="marquee__now" id="marquee"><span class="marquee__code">--</span><span class="marquee__text">Pick a record</span></p>
+        </div>
+
+        <div class="selector">
+          <div class="strips" id="strips" role="group" aria-label="Selections: each side is a route">
+            <noscript><p class="strips__noscript">The jukebox needs JavaScript. Every route also answers on its own, for example <a href="/json">/json</a> or <a href="/env">/env</a>.</p></noscript>
+          </div>
+        </div>
+
+        <div class="base">
+          <p class="nameplate"><span class="nameplate__brand">Kestrel</span><span class="nameplate__model">Minimal 8</span></p>
+          <dl class="serial" id="serial" aria-label="Serial plate: the machine that plays, read from GET /env">
+            <div><dt>Operating System</dt><dd>reading /env…</dd></div>
+            <div><dt>.NET version</dt><dd>…</dd></div>
+            <div><dt>Username</dt><dd>…</dd></div>
+            <div><dt>Date and Time</dt><dd>…</dd></div>
+          </dl>
+          <p class="serial__source">Serial plate: <a href="/env">GET /env</a>, written by the server from <code>Environment</code></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- What the jukebox plays: the real HTTP answer of the route -->
+    <section class="liner" aria-labelledby="liner-title">
+      <h1 class="liner__title" id="liner-title">Every record is a route.</h1>
+      <p class="liner__lead">Kestrel Minimal 8 holds twenty sides, all from one <code>Program.cs</code>. Press a key: the jukebox calls the route with <code>fetch</code> and plays back the real answer of Kestrel, the ASP.NET Core web server, running on Clever Cloud.</p>
+
+      <article class="readout" id="readout" data-status="idle" aria-live="polite">
+        <header class="readout__head">
+          <h2>Now playing</h2>
+          <span class="readout__code" id="r-code">--</span>
+        </header>
+        <div class="readout__idle" id="r-idle">
+          <p>The platter is empty. Press a selection key on the jukebox, or type its code on your keyboard, for example <kbd>E</kbd> then <kbd>2</kbd>.</p>
+        </div>
+        <div class="readout__live" id="r-live" hidden>
+          <p class="readout__request"><span class="readout__verb" id="r-verb">GET</span> <a id="r-path" href="/" target="_blank" rel="noopener">/</a></p>
+          <p class="readout__status"><b id="r-status">200</b> <span id="r-reason">OK</span></p>
+          <dl class="readout__headers" id="r-headers"></dl>
+          <p class="readout__sent" id="r-sent-wrap" hidden>Request body sent: <code id="r-sent"></code></p>
+          <pre class="readout__body" id="r-body"></pre>
+          <figure class="readout__notes">
+            <figcaption id="r-feature">In Program.cs</figcaption>
+            <pre><code id="r-csharp"></code></pre>
+          </figure>
+        </div>
+      </article>
+
+      <form class="dedication" id="dedication">
+        <label for="dedication-name">Dedicate <b>B1</b> to</label>
+        <input id="dedication-name" name="name" type="text" value="Clever" maxlength="32" autocomplete="off" spellcheck="false">
+        <button type="submit">Play B1</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- The wall of the diner: a gold record for the certification, and the platform card -->
+  <div class="wall cc-container">
+    <section class="award" aria-labelledby="award-title">
+      <a class="award__frame" href="https://academy.clever.cloud/" target="_blank" rel="noopener" aria-label="Clever Cloud Academy">
+        <span class="award__disc"><img src="/cc-badge.svg" width="104" height="104" alt="Clever Cloud certification badge"></span>
+        <span class="award__plate">Certified on Clever Cloud</span>
+      </a>
+      <div class="award__text">
+        <h2 id="award-title">This app runs on Clever Cloud. You can too: get certified.</h2>
+        <p>Two official Clever Cloud Academy tracks, free and online. At the end, a verifiable badge to show on LinkedIn.</p>
+        <ul class="award__tracks">
+          <li><a href="https://academy.clever.cloud/course/view.php?id=2" target="_blank" rel="noopener"><b>Cloud Computing Fundamentals</b><span>Concepts, architectures, IaaS, PaaS and FaaS.</span></a></li>
+          <li><a href="https://academy.clever.cloud/course/section.php?id=18" target="_blank" rel="noopener"><b>Advanced Deployment</b><span>Deploy, configure and run an app like this one.</span></a></li>
+        </ul>
+        <a class="cc-btn cc-btn--gradient" href="https://academy.clever.cloud/" target="_blank" rel="noopener">Get certified</a>
+      </div>
+    </section>
+
+    <section class="cc-platform platform" aria-labelledby="platform-title">
+      <div class="cc-platform__head">
+        <h3 id="platform-title">Running on Clever Cloud</h3>
+        <span class="cc-pill cc-pill--ok" id="instance-pill"><span class="cc-dot"></span><span id="instance-text">…</span></span>
+      </div>
+      <dl class="cc-kv" id="platform-kv">
+        <div><dt>Application</dt><dd data-var="CC_APP_NAME">…</dd></div>
+        <div><dt>App ID</dt><dd data-var="APP_ID">…</dd></div>
+        <div><dt>Instance</dt><dd data-var="INSTANCE_NUMBER">…</dd></div>
+        <div><dt>Type</dt><dd data-var="INSTANCE_TYPE">…</dd></div>
+        <div><dt>Name</dt><dd data-var="CC_PRETTY_INSTANCE_NAME">…</dd></div>
+        <div><dt>Commit</dt><dd data-var="CC_COMMIT_ID">…</dd></div>
+        <div><dt>Deployment</dt><dd data-var="CC_DEPLOYMENT_ID">…</dd></div>
+      </dl>
+      <div class="cc-platform__foot">Variables injected by the platform, served by <a href="/platform">GET /platform</a>: <a href="https://www.clever.cloud/developers/doc/reference/reference-environment-variables/" target="_blank" rel="noopener">reference</a>.</div>
+    </section>
+  </div>
+</main>
+
+<footer class="cc-footer">
+  <div class="cc-container">
+    <div class="cc-footer__inner">
+      <div class="cc-footer__brand">
+        <svg class="cc-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 116" role="img" aria-label="Clever Cloud">
+  <g fill="none">
+        <g fill="currentColor" transform="translate(129 35)">
+      <path d="M15.241,18.87 C10.52,18.87 7.335,22.47 7.335,27.013 C7.335,31.556 10.58,35.215 15.183,35.215 C18.074,35.215 20.375,34.212 22.145,32.442 L25.804,37.753 C23.562,40.232 19.49,42.002 15.005,42.002 C6.627,42.002 0.136,35.275 0.136,27.073 C0.136,18.812 6.627,12.086 14.888,12.086 C19.726,12.086 23.562,13.738 26.039,16.335 L21.909,21.468 C20.139,19.755 18.015,18.87 15.241,18.87 Z"/>
+      <polygon points="31.229 .578 38.428 .578 38.428 41.174 31.229 41.174"/>
+      <path d="M44.976,27.072 C44.976,18.811 51.112,12.085 59.255,12.085 C67.339,12.085 73.475,18.339 73.475,26.482 C73.475,27.367 73.416,28.37 73.298,28.842 L52.351,28.842 C53.059,32.795 56.069,35.628 60.435,35.628 C63.267,35.628 65.687,34.389 67.339,32.678 L71.056,37.575 C68.932,40.053 64.919,42 60.14,42 C51.348,42 44.976,35.274 44.976,27.072 Z M52.469,24.299 L66.1,24.299 C65.274,20.286 62.737,18.221 59.373,18.221 C55.773,18.221 53.295,20.699 52.469,24.299 Z"/>
+      <polygon points="104.864 12.911 94.656 41.175 85.333 41.175 75.065 12.911 82.972 12.911 90.17 34.743 97.487 12.911"/>
+      <path d="M106.867 27.072C106.867 18.811 113.003 12.085 121.146 12.085 129.23 12.085 135.366 18.339 135.366 26.482 135.366 27.367 135.307 28.37 135.189 28.842L114.242 28.842C114.95 32.795 117.96 35.628 122.326 35.628 125.158 35.628 127.578 34.389 129.23 32.678L132.947 37.575C130.823 40.053 126.81 42 122.031 42 113.239 42 106.867 35.274 106.867 27.072zM114.36 24.299L127.991 24.299C127.165 20.286 124.628 18.221 121.264 18.221 117.665 18.221 115.187 20.699 114.36 24.299zM148.758 41.174L141.56 41.174 141.56 12.91 148.758 12.91 148.758 15.978C150.351 13.618 152.711 12.083 155.661 12.083 157.55 12.083 159.084 12.614 160.205 13.499L157.195 20.344C156.252 19.577 154.836 19.105 153.478 19.105 150.586 19.105 148.757 21.524 148.757 25.36L148.757 41.174 148.758 41.174zM191.415 18.87C186.694 18.87 183.508 22.47 183.508 27.013 183.508 31.556 186.753 35.215 191.356 35.215 194.248 35.215 196.548 34.212 198.319 32.442L201.977 37.753C199.735 40.232 195.664 42.002 191.179 42.002 182.8 42.002 176.31 35.275 176.31 27.073 176.31 18.812 182.8 12.086 191.061 12.086 195.9 12.086 199.735 13.738 202.213 16.335L198.082 21.468C196.312 19.755 194.188 18.87 191.415 18.87z"/>
+      <polygon points="207.402 .578 214.6 .578 214.6 41.174 207.402 41.174"/>
+      <path d="M221.148 27.072C221.148 18.811 227.639 12.085 235.84 12.085 244.042 12.085 250.592 18.812 250.592 27.072 250.592 35.274 244.042 42.001 235.84 42.001 227.64 42 221.148 35.274 221.148 27.072zM243.335 27.013C243.335 22.47 240.207 18.87 235.9 18.87 231.533 18.87 228.347 22.47 228.347 27.013 228.347 31.556 231.533 35.215 235.9 35.215 240.207 35.215 243.335 31.556 243.335 27.013zM263.924 28.193C263.924 32.323 266.343 35.097 269.943 35.097 273.542 35.097 275.962 32.324 275.962 28.193L275.962 12.911 283.16 12.911 283.16 28.724C283.16 36.631 277.909 41.882 269.943 41.882 261.977 41.882 256.725 36.631 256.725 28.724L256.725 12.911 263.924 12.911 263.924 28.193zM318.795.578L318.795 41.174 311.537 41.174 311.537 38.106C309.472 40.525 306.58 42.001 302.922 42.001 295.429 42.001 289.351 35.864 289.351 27.072 289.351 18.516 295.075 12.085 302.922 12.085 306.64 12.085 309.53 13.442 311.537 15.743L311.537.578 318.795.578zM311.537 27.013C311.537 22.47 308.409 18.87 304.102 18.87 299.735 18.87 296.549 22.47 296.549 27.013 296.549 31.556 299.735 35.215 304.102 35.215 308.409 35.215 311.537 31.556 311.537 27.013z"/>
+    </g>
+    <polygon fill="#AB2B4A" points="100.423 29.134 100.423 86.868 89.721 73.062 83.76 58.003 83.756 58.003 89.418 42.731"/><polygon fill="#E87A68" points=".429 29.134 .429 86.868 9.889 73.481 17.092 58.003 17.096 58.003 9.773 43.319"/><polygon fill="#D74D4E" points="83.756 58.003 52.241 60.003 17.092 58.003 31.76 29.134 50.426 .269 70.722 31.961"/><polygon fill="#BD3246" points="100.423 29.134 83.756 58.003 50.426 .269"/><polygon fill="#F19175" points="50.426 .269 17.092 58.003 .425 29.134"/><polygon fill="#CF3942" points="83.756 58.003 72.365 82.931 50.426 115.737 27.849 81.83 17.092 58.003"/><polygon fill="#E0625B" points="50.426 115.737 .425 86.868 17.092 58.003"/><polygon fill="#9A244F" points="50.422 115.737 100.423 86.868 83.756 58.003"/>
+  </g>
+</svg>
+        <p>European PaaS, fully managed. One <code>Program.cs</code>, one <span class="cc-kbd">clever deploy</span>, no Dockerfile.</p>
+      </div>
+      <div>
+        <h4>Documentation</h4>
+        <ul>
+          <li><a href="https://www.clever.cloud/developers/doc/deploy/applications/dotnet/" target="_blank" rel="noopener">.NET runtime on Clever Cloud</a></li>
+          <li><a href="https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis" target="_blank" rel="noopener">ASP.NET Core minimal APIs</a></li>
+          <li><a href="https://console.clever-cloud.com" target="_blank" rel="noopener">Clever Cloud Console</a></li>
+        </ul>
+      </div>
+      <div class="foot-academy">
+        <a href="https://academy.clever.cloud/" target="_blank" rel="noopener" class="foot-academy__badge" aria-label="Clever Cloud Academy"><img src="/cc-badge.svg" width="56" height="56" alt=""></a>
+        <div>
+          <h4>Clever Cloud Academy</h4>
+          <ul>
+            <li><a class="is-cert" href="https://academy.clever.cloud/" target="_blank" rel="noopener">Get certified ↗</a></li>
+            <li><a href="https://www.clever.cloud" target="_blank" rel="noopener">clever.cloud</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="cc-footer__bottom"><span>Demo built by the Clever Cloud presales team</span><span>MIT License</span></div>
+  </div>
+</footer>
+
+</body>
+</html>

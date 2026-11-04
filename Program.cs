@@ -11,15 +11,34 @@ var app = builder.Build();
 
 app.Logger.LogInformation($"Current process ID: {Environment.ProcessId}");
 
+// The jukebox page on /: wwwroot/index.html, with its CSS and JS as files, so the CSP allows no inline code.
+app.Use(async (context, next) =>
+{
+    var headers = context.Response.Headers;
+    headers.ContentSecurityPolicy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; " +
+                                    "connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
+    headers.XContentTypeOptions = "nosniff";
+    headers["Referrer-Policy"] = "no-referrer";
+    await next();
+});
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 string Plaintext() => "Hello, World!";
 app.MapGet("/plaintext", Plaintext);
 
-app.MapGet("/", () => $"""
+// The original home route, moved from / to /env: the jukebox's serial plate reads it.
+app.MapGet("/env", () => $"""
     Operating System: {Environment.OSVersion}
     .NET version: {Environment.Version}
     Username: {Environment.UserName}
     Date and Time: {DateTime.Now}
     """);
+
+// The "Running on Clever Cloud" panel: these platform variables, never any other.
+string[] platformVariables = ["CC_APP_NAME", "APP_ID", "INSTANCE_NUMBER", "INSTANCE_TYPE", "CC_PRETTY_INSTANCE_NAME", "CC_COMMIT_ID", "CC_DEPLOYMENT_ID"];
+app.MapGet("/platform", () => platformVariables.ToDictionary(name => name, name => Environment.GetEnvironmentVariable(name)));
+
 var outer = app.MapGroup("/outer");
 var inner = outer.MapGroup("/inner");
 
