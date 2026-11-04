@@ -1,23 +1,21 @@
 # MinimalSample — ASP.NET Core minimal API on Clever Cloud
 
-> One `Program.cs`, no controller, no NuGet package: the home route prints the operating system, the .NET version, the user and the date of the machine that runs it, and a dozen routes show what minimal APIs do — route groups and endpoint filters, typed results (200, 400, 404), Problem Details, a custom binder. On Clever Cloud the **native .NET runtime** finds the single `.csproj`, publishes it in Release and starts it on port 8080: no Dockerfile, no add-on, one health check variable.
+> One `Program.cs`, no controller, no NuGet package: the home route prints the operating system, the .NET version, the user and the date of the machine that runs it, and a dozen routes show what minimal APIs do — route groups and endpoint filters, typed results (200, 400, 404), Problem Details, a custom binder. On Clever Cloud the **native .NET runtime** finds the single `.csproj`, publishes it in Release, and the app listens on port 8080: no Dockerfile, no add-on, one health check variable.
 
-![The home route in a browser, run locally: operating system, .NET version, user name, date and time, in plain text](docs/screenshot-desktop.png)
-
-<img src="docs/screenshot-phone.png" alt="The home route on a phone, run locally, in plain text" width="300">
+![The home route on Clever Cloud, in plain text: the instance's operating system, .NET 8.0.33, the runtime user bas, date and time](docs/screenshot-desktop.png)
 
 **Run it yourself.** The hosted demo was taken down after the presales review (November 2026). The steps in [Deploy on Clever Cloud](#deploy-on-clever-cloud) recreate it from scratch in about 5 minutes.
 
 ## What ASP.NET Core does here
 
-| Route | Minimal API feature | What you get (checked locally) |
+| Route | Minimal API feature | What you get (checked on Clever Cloud, 4 November 2026) |
 |---|---|---|
 | `GET /` | A raw interpolated string from `Environment` | `Operating System`, `.NET version`, `Username`, `Date and Time` (server time, server culture), `text/plain` |
 | `GET /plaintext`, `GET /json` | A string becomes `text/plain`, an object becomes JSON | `Hello, World!` · `{"message":"Hello, World!"}` |
 | `GET /hello/{name}` | Route parameter | `Hello, Clever!` for `/hello/Clever` |
 | `/outer/…` | `MapGroup` four levels deep, two `AddEndpointFilterFactory` on the inner group, `WithTags` | `/outer/inner/innerget`: `I'm more nested. \| nested filter! \| /inner filter! Tags: (null)` |
 | `GET /todo/{id}` | `Results<Ok<Todo>, NotFound, BadRequest>` typed results | 1 to 10: `{"id":3,"title":"Walk the dog"}`; 0 or less: 400; above 10: 404 |
-| `GET /problem/{problemType}` | `Results.Problem`, `Results.ValidationProblem`, `TypedResults.ValidationProblem` | `application/problem+json`, 500 or 400, with `"traceId":"traceId123"` |
+| `GET /problem/{problemType}` | `Results.Problem`, `Results.ValidationProblem`, `TypedResults.ValidationProblem` | `plain`, `object`: 500; `validation`, `objectValidation`, `validationTyped`: 400; all in `application/problem+json` with `"traceId":"traceId123"`. Any other value: 404 |
 | `POST /todos` | `IBindableFromHttpContext<T>`: the type binds itself | Whatever the body: `{"id":1,"title":"I was bound from IBindableFromHttpContext<TodoBindable>.BindAsync!","isComplete":false}` |
 | `GET /null-result` | A handler returning `null` | 500 |
 
@@ -41,7 +39,9 @@ clever deploy
 clever open
 ```
 
-No add-on, no secret, no setup script. Clever Cloud detects the single `.csproj`, builds with `dotnet publish --framework net8.0 --configuration Release` and starts the app on port 8080.
+No add-on, no secret, no setup script. Clever Cloud detects the single `.csproj` and builds with `dotnet publish --framework net8.0 --configuration Release`.
+
+The app must listen on `0.0.0.0:8080`: `appsettings.json` sets `"Urls": "http://0.0.0.0:8080"`. Without it, Kestrel binds `localhost:5000` and the deploy fails its health check after about 4 minutes ("Your application is not listening on 8080"), as seen on 4 November 2026. With it, `clever deploy` took 60 s; the domain then answered after about 70 s more.
 
 **.NET 8 reaches end of support on 10 November 2026.** The Clever Cloud docs accept `10.0 (LTS)` through `CC_DOTNET_VERSION`. The migration is `<TargetFramework>net10.0</TargetFramework>` plus `clever env set CC_DOTNET_VERSION 10.0`, to be tested with a local .NET 10 SDK first.
 
@@ -62,7 +62,7 @@ No add-on, no secret, no setup script. Clever Cloud detects the single `.csproj`
 ```
 Program.cs                      the whole app: routes, groups, filters, typed results, Problem Details, the binder
 MinimalSample.csproj            Microsoft.NET.Sdk.Web, net8.0, nullable and implicit usings on
-appsettings.json                log levels, AllowedHosts *
+appsettings.json                log levels, AllowedHosts *, Urls http://0.0.0.0:8080 (the port Clever Cloud expects)
 appsettings.Development.json    log levels in Development
 Properties/launchSettings.json  the dotnet run profile: http://localhost:5000, https://localhost:5001, Development
 ```
@@ -73,7 +73,7 @@ Properties/launchSettings.json  the dotnet run profile: http://localhost:5000, h
 
 ```bash
 dotnet run                                                  # launch profile: http://localhost:5000 and https://localhost:5001
-dotnet run --no-launch-profile --urls http://localhost:8302   # one HTTP port, Production, as for the screenshots
+dotnet run --no-launch-profile                              # Production, on 0.0.0.0:8080 as on Clever Cloud
 ```
 
 Requires the .NET 8 SDK.
